@@ -1,0 +1,25 @@
+{
+  "branches": {
+    "coverage": "-",
+    "missed": 0,
+    "total": 0
+  },
+  "functions": {
+    "coverage": "73.01%",
+    "missed": 1366,
+    "total": 5061
+  },
+  "generated_at": "2026-08-16T14:00:45Z",
+  "lines": {
+    "coverage": "77.32%",
+    "missed": 9513,
+    "total": 41936
+  },
+  "package": "workspace",
+  "regions": {
+    "coverage": "76.48%",
+    "missed": 13841,
+    "total": 58846
+  },
+  "run_url": "https://github.com/q-qp-p/AgentENV/actions/runs/31945573703"
+}
