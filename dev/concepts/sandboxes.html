@@ -36,10 +36,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-289f5a05.js";
+            window.path_to_searchindex_js = "../searchindex-0b68ea43.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-c346f288.js"></script>
+        <script src="../toc-5437f69c.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -230,7 +230,7 @@
 <pre><code class="language-bash">aenv start --cold ubuntu:24.04
 </code></pre>
 <p>The cold-start API accepts an optional <code>diskSizeMB</code> field to set the root filesystem’s virtual size in MiB. Explicit values must be at least 1024 MiB and divisible by 1024 because the current resize tool operates at 1 GiB granularity. Growth is allowed by default; shrinking below the source image size requires <code>ublk.overlaybd.allow_shrink = true</code>. If omitted, the image’s built-in virtual size is used. Resizing applies only when creating a fresh writable root filesystem, not to read-only images, images with an existing upper, or snapshot resume. Sandbox responses also report disk size as <code>diskSizeMB</code>.</p>
-<p>Use <code>aenv start --secure</code> with either warm or cold starts to require an envd access token for command and file operations. The CLI obtains and sends the token automatically. Secure mode protects the envd control port only; it does not add authentication to application ports. Each fork derives a distinct envd token from the child sandbox ID.</p>
+<p>Use <code>aenv start --secure</code> with either warm or cold starts to require an envd access token for command and file operations. The CLI obtains and sends the token automatically. Secure mode protects the envd control port, while application proxy requests use the independent sandbox-scoped traffic token. Each fork derives distinct envd and traffic credentials from the child sandbox ID.</p>
 <hr>
 <h2 id="working-with-sandboxes"><a class="header" href="#working-with-sandboxes">Working with Sandboxes</a></h2>
 <h3 id="shell-and-command-execution"><a class="header" href="#shell-and-command-execution">Shell and command execution</a></h3>
@@ -304,7 +304,7 @@ aenv timeout &lt;sandbox-id&gt; 600
 </code></pre>
 <p>For fine-grained egress control, pass a <code>network</code> object when creating the sandbox. Within user-configured egress rules, traffic is allow-by-default, and <code>allowOut</code> entries take precedence over matching <code>denyOut</code> entries. <code>allowOut</code> by itself does not create an allowlist: destinations that do not match a deny rule remain reachable.</p>
 <ul>
-<li><code>allowOut</code> — CIDR or IP. Domain patterns are currently not supported.</li>
+<li><code>allowOut</code> — CIDR, IP, or domain pattern. Domain patterns apply to new TCP connections on ports 80 and 443 and require <code>denyOut: ["0.0.0.0/0"]</code>. Exact names, <code>*.example.com</code>, and <code>*</code> are supported; a wildcard does not match the apex domain.</li>
 <li><code>denyOut</code> — CIDR or IP</li>
 </ul>
 <p>The following diagram illustrates how the rules are evaluated:</p>
@@ -340,6 +340,8 @@ aenv timeout &lt;sandbox-id&gt; 600
   http://127.0.0.1:8000/sandboxes/&lt;sandbox-id&gt;/network
 </code></pre>
 <p>Omitting both fields clears all per-sandbox egress rules and restores the default allow behavior.</p>
+<p>Updating a policy primarily affects new connections; existing connections are not actively terminated. During replacement, the previous policy remains active until the new namespace rules are committed.</p>
+<p>For domain rules, the proxy matches the inspected Host/SNI and re-resolves the hostname using the host-side trusted resolver before connecting; the guest’s DNS answer and original destination IP are not authoritative for domain policy.</p>
 <hr>
 <h2 id="data-storage"><a class="header" href="#data-storage">Data Storage</a></h2>
 <div class="table-wrapper">
