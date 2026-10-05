@@ -36,10 +36,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-da116984.js";
+            window.path_to_searchindex_js = "../../searchindex-41174ef2.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-c8205cda.js"></script>
+        <script src="../../toc-d7504e7d.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -207,7 +207,7 @@ template name can be used anywhere a template ID is accepted.</p>
 <tr><td><code>--cpu &lt;count&gt;</code></td><td><code>[machine].vcpu_count</code> from your config file</td><td>Set the template’s vCPU count. Alias: <code>--cpu-count</code>.</td></tr>
 <tr><td><code>--memory &lt;MiB&gt;</code></td><td><code>[machine].mem_size_mib</code> from your config file</td><td>Set the template’s memory. Aliases: <code>--memory-mb</code>, <code>--mem</code>.</td></tr>
 <tr><td><code>--start-cmd &lt;cmd&gt;</code></td><td>None</td><td>Run a command before capturing the template snapshot.</td></tr>
-<tr><td><code>--ready-cmd &lt;cmd&gt;</code></td><td><code>sleep 20</code> when <code>--start-cmd</code> is set; otherwise none</td><td>Poll a shell command every two seconds until it exits successfully.</td></tr>
+<tr><td><code>--ready-cmd &lt;cmd&gt;</code></td><td><code>/agentenv/bin/busybox sleep 20</code> when <code>--start-cmd</code> is set; otherwise none</td><td>Poll a shell command every two seconds until it exits successfully.</td></tr>
 <tr><td><code>--probe &lt;port&gt;</code></td><td>None</td><td>Wait for TCP on <code>localhost:&lt;port&gt;</code>. Cannot be combined with <code>--ready-cmd</code>.</td></tr>
 <tr><td><code>-d, --detach</code></td><td>Off</td><td>Submit the build and return immediately instead of waiting.</td></tr>
 <tr><td><code>--timeout &lt;seconds&gt;</code></td><td>No timeout</td><td>Limit how long the CLI waits for the build. Cannot be combined with <code>--detach</code>.</td></tr>
@@ -288,10 +288,9 @@ capacity exceeds that volume limit; setting a smaller volume limit does not
 prevent the server from starting or serving other APIs. Builder CPU, memory,
 and cache capacity are independent of the CPU and memory assigned to the
 resulting template.</p>
-<h3 id="monitor-a-build"><a class="header" href="#monitor-a-build">Monitor a Build</a></h3>
-<p><code>aenv build</code> remains connected, streams progress, and exits nonzero on failure.
-Once BuildKit succeeds, AgentENV continues importing and publishing the template
-even if the CLI is interrupted. Check its status by template name or ID:</p>
+<h2 id="monitor-a-build"><a class="header" href="#monitor-a-build">Monitor a Build</a></h2>
+<p><code>aenv pull</code> waits for the template to become ready by default. If you submit it
+with <code>--detach</code>, monitor the build by template name or ID:</p>
 <pre><code class="language-bash">aenv template watch my-template
 </code></pre>
 <p><code>aenv template watch</code> has no timeout option. Stop the local watch with <code>Ctrl-C</code>;
